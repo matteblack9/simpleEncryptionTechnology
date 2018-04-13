@@ -10,19 +10,19 @@ int main(){
     char **tmp_text;
 
 wrong:
-    printf("암호는 1번, 복호는 2번 선택 : ");
+    printf("Encryption - 1, Decryption - 2 : ");
     scanf("%d", &select);
 
     if(select == 1) 
-        printf("평문 입력 : ");
+        printf("Enter plain text : ");
     else if(select == 2) 
-        printf("암호문 입력 : ");
+        printf("Enter cipher text : ");
     else goto wrong;
 
     scanf("%s", text);
     size = strlen(text);
     
-    printf("Rail의 수 : ");
+    printf("Number of rails : ");
     scanf("%d", &rail);
     tmp_text = (char**)malloc(sizeof(char*) * rail);
     for(int i = 0; i < rail; i++)
@@ -35,13 +35,9 @@ wrong:
 void railFence(char* text, char* c_text, char* d_text, char** tmp_text){
 	const int r = size % rail, q = size / rail;
     if(select == 1){
-        for(col_num  = 0; col_num < size; col_num++){
-            if(((text[col_num] >= 'a') && (text[col_num] <= 'z')) ||
-                ((text[col_num] >= 'A') && (text[col_num] <= 'Z'))){
-                    tmp_text[col_num % rail][col_num / rail] = text[col_num]; 
-			}
-			else ;
-        }
+        for(col_num  = 0; col_num < size; col_num++)
+            tmp_text[col_num % rail][col_num / rail] = text[col_num]; 
+        
 		int adder, loc = 0;
         for(col_num = 0; col_num < (size / rail); col_num++){
 			c_text[col_num] = tmp_text[0][col_num];
@@ -59,14 +55,12 @@ void railFence(char* text, char* c_text, char* d_text, char** tmp_text){
 			c_text[loc = loc  + q] = tmp_text[j][col_num]; loc++;
 		}
 		c_text[size] = '\0';
-		printf("암호문 : %s\n", c_text);
+		printf("Cipher : %s\n", c_text);
     }
 
 	else if(select == 2){
 		int adder, loc = 0;
         for(col_num  = 0; col_num < size / rail; col_num++){
-            if(((text[col_num] >= 'a') && (text[col_num] <= 'z')) || 
-                ((text[col_num] >= 'A') && (text[col_num] <= 'Z'))){
                 tmp_text[0][col_num] = text[col_num];
 				loc = col_num;
 				int temp = r;
@@ -76,7 +70,6 @@ void railFence(char* text, char* c_text, char* d_text, char** tmp_text){
 					tmp_text[j][col_num] = text[loc = loc + (size / rail) + adder];
 					--temp;
 				}
-			}
 		}		
 		loc = 0;
 		for(int j = 0; j < size % rail; j++){
@@ -87,6 +80,6 @@ void railFence(char* text, char* c_text, char* d_text, char** tmp_text){
 			d_text[col_num] = tmp_text[col_num % rail][col_num / rail];
 
 		d_text[size] = '\0';
-		printf("복호문 : %s\n", d_text);
+		printf("Decipher : %s\n", d_text);
 	}
 }
