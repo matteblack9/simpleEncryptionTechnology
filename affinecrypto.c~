@@ -1,8 +1,0 @@
-#include <stdio.h>
-
-int main(){
-    int i = 0, key = 0, str_size = 0;
-    char str[50] = {0, };
-
-    printf("평문 또는 암호문을 입력하시오");
-}
