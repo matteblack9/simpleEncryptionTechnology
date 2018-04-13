@@ -33,17 +33,16 @@ wrong:
 }
 
 void railFence(char* text, char* c_text, char* d_text, char** tmp_text){
+	const int r = size % rail, q = size / rail;
     if(select == 1){
         for(col_num  = 0; col_num < size; col_num++){
             if(((text[col_num] >= 'a') && (text[col_num] <= 'z')) ||
                 ((text[col_num] >= 'A') && (text[col_num] <= 'Z'))){
-                    for(int i = 0; i < rail; i++)
-                        if(col_num % rail == i) 
-                            tmp_text[i][col_num / rail] = text[col_num]; 
+                    tmp_text[col_num % rail][col_num / rail] = text[col_num]; 
 			}
 			else ;
         }
-		int adder, loc = 0, r = size % rail, q = size / rail;
+		int adder, loc = 0;
         for(col_num = 0; col_num < (size / rail); col_num++){
 			c_text[col_num] = tmp_text[0][col_num];
 			loc = col_num;
@@ -64,30 +63,30 @@ void railFence(char* text, char* c_text, char* d_text, char** tmp_text){
     }
 
 	else if(select == 2){
+		int adder, loc = 0;
         for(col_num  = 0; col_num < size / rail; col_num++){
-            if(((text[col_num] >= 'a') && (text[col_num] <= 'z')) ||
+            if(((text[col_num] >= 'a') && (text[col_num] <= 'z')) || 
                 ((text[col_num] >= 'A') && (text[col_num] <= 'Z'))){
-                    for(int i = 0; i < rail; i++)
-                        if(col_num % rail == i) 
-                        	text[col_num] = tmp_text[i][col_num / rail];
+                tmp_text[0][col_num] = text[col_num];
+				loc = col_num;
+				int temp = r;
+				for(int j = 1; j < rail; j++){
+					if((temp > 0)) adder = 1;
+					else adder = 0;
+					tmp_text[j][col_num] = text[loc = loc + (size / rail) + adder];
+					--temp;
+				}
 			}
-			else ;
-        }
-		int adder, loc = 0, r = size % rail, q = size / rail;
-        for(col_num = 0; col_num < (size / rail); col_num++){
-			c_text[col_num] = tmp_text[0][col_num];
-			loc = col_num;
-			int temp = r;
-            for(int j = 1; j < rail; j++){
-				if((temp > 0)) adder = 1;
-				else adder = 0;
-                c_text[loc = loc + (size / rail) + adder] = tmp_text[j][col_num];
-				--temp;
-            }
-		}
+		}		
 		loc = 0;
 		for(int j = 0; j < size % rail; j++){
-			c_text[loc = loc  + q] = tmp_text[j][col_num]; loc++;
+			tmp_text[j][col_num] = text[loc = loc  + q]; loc++;
 		}
+
+		for(col_num = 0; col_num < size; col_num++)
+			d_text[col_num] = tmp_text[col_num % rail][col_num / rail];
+
+		d_text[size] = '\0';
+		printf("º¹È£¹® : %s\n", d_text);
 	}
 }
