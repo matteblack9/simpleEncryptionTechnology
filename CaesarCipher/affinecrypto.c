@@ -8,16 +8,21 @@ int main(){
     char str[50] = {0, };
 
     printf("Enter plain text or Cipher text: ");
-    scanf("%s", str);
+    gets(str);
 
-wrong:
+choice:
     printf("1 - Encryption 2 - Decryption\nChoose the work : ");
     scanf("%d", &choice);
     if(choice == 1 || choice == 2) ;
-    else goto wrong;
+    else goto choice;
 
+type_Key:
     printf("Enter the value of KEY1: ");
     scanf("%d", &key1);
+    if(26 % key1 == 0) {
+        printf("This cannot be the Key number. Please type the number of disjoint with 26.\n");
+        goto type_Key;
+    }
 
     printf("Enter the value of KEY2: ");
     scanf("%d", &key2);
@@ -46,7 +51,7 @@ void affine_Cipher(char *str, int size, int key1, int key2, int choice){
             else if(number) str[i] -= '0';
 
             if(choice == 1){
-                if((str[i]*key1 + key2) < 0){
+                while((str[i]*key1 + key2) < 0){
                     if(upper || lower)
                         str[i] += 26;
                     else if(number)

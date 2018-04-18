@@ -46,13 +46,16 @@ void gronsfeld(char* str, char* key, int str_size, int Key_Size, int select){
                else if(isnumber) str[i] -= '0';
                 temp = key[j] - '0';
                 while(str[i] + temp < 0) {
-                    str[i] += 26;
+                    if(isUcharacter || isLcharacter) str[i] += 26; 
+                    else if(isnumber) str[i] += 10;
                 }
 
-               str[i] = (str[i] + temp) % 26;
+               if(isUcharacter || isLcharacter) str[i] = (str[i] + temp) % 26; 
+               else if(isnumber) str[i] = (str[i] + temp) % 10; 
                if(isUcharacter) str[i] += 'a'; 
                else if(isLcharacter) str[i] += 'A';
                else if(isnumber) str[i] += '0';
+
             }
         }
 
@@ -62,11 +65,16 @@ void gronsfeld(char* str, char* key, int str_size, int Key_Size, int select){
                 else if(isLcharacter) str[i] -= 'A'; 
                 else if(isnumber) str[i] -= '0';
                 temp = key[j] - '0';
-                while(str[i] - temp < 0) str[i] += 26;
-                str[i] = (str[i] - temp) % 26;
+                while(str[i] - temp < 0){
+                    if(isUcharacter || isLcharacter) str[i] += 26; 
+                    else if(isnumber) str[i] += 10;
+                }
+                if(isUcharacter || isLcharacter) str[i] = (str[i] - temp) % 26;
+                else if(isnumber) str[i] = (str[i] - temp) % 10;
                 if(isUcharacter) str[i] += 'a'; 
                 else if(isLcharacter) str[i] += 'A'; 
                 else if(isnumber) str[i] += '0';
+                printf("%d ", str[i]);               
             }
         }
         else ;

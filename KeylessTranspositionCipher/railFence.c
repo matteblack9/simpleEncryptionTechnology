@@ -2,12 +2,11 @@
 #include <string.h>
 #include <stdlib.h>
 
-void railFence(char*, char*, char*, char**);
+void railFence(char*, char*, char*);
 int row_num = 0, col_num = 0, size = 0, select = 0, cnt = 0, rail = 0;
 
 int main(){
     char text[64], c_text[64], d_text[64];
-    char **tmp_text;
 
 wrong:
     printf("Encryption - 1, Decryption - 2 : ");
@@ -24,61 +23,68 @@ wrong:
     
     printf("Number of rails : ");
     scanf("%d", &rail);
-    tmp_text = (char**)malloc(sizeof(char*) * rail);
-    for(int i = 0; i < rail; i++)
-		tmp_text[i] = (char*)malloc(sizeof(char) * size + 1);
 
-	railFence(text, c_text, d_text, tmp_text);
+	railFence(text, c_text, d_text);
     return 0;
 }
 
-void railFence(char* text, char* c_text, char* d_text, char** tmp_text){
-	const int r = size % rail, q = size / rail;
+void railFence(char* text, char* c_text, char* d_text){
     if(select == 1){
-        for(col_num  = 0; col_num < size; col_num++)
-            tmp_text[col_num % rail][col_num / rail] = text[col_num]; 
-        
-		int adder, loc = 0;
-        for(col_num = 0; col_num < (size / rail); col_num++){
-			c_text[col_num] = tmp_text[0][col_num];
-			loc = col_num;
-			int temp = r;
-            for(int j = 1; j < rail; j++){
-				if((temp > 0)) adder = 1;
-				else adder = 0;
-                c_text[loc = loc + (size / rail) + adder] = tmp_text[j][col_num];
-				--temp;
-            }
-		}
-		loc = 0;
-		for(int j = 0; j < size % rail; j++){
-			c_text[loc = loc  + q] = tmp_text[j][col_num]; loc++;
+    	int k = 0;
+    	for(int i = 0; i < rail; i++){
+    		if (i == 0 || i == rail - 1){
+    			int j = i;
+				while(j < size){
+					c_text[k++] = text[j];
+					j = j + 2*(rail - 1);
+				}
+			}
+			
+			else{
+				int j = i, check = 0;
+				while(j < size){
+					if(!check){
+						c_text[k++] = text[j];
+						j = j + 2*(rail - i - 1);
+					}
+					else{
+						c_text[k++] = text[j];
+						j = j + 2*i;
+					}
+					check = !check;
+				}
+			}
 		}
 		c_text[size] = '\0';
 		printf("Cipher : %s\n", c_text);
     }
 
 	else if(select == 2){
-		int adder, loc = 0;
-        for(col_num  = 0; col_num < size / rail; col_num++){
-                tmp_text[0][col_num] = text[col_num];
-				loc = col_num;
-				int temp = r;
-				for(int j = 1; j < rail; j++){
-					if((temp > 0)) adder = 1;
-					else adder = 0;
-					tmp_text[j][col_num] = text[loc = loc + (size / rail) + adder];
-					--temp;
+    	int k = 0;
+    	for(int i = 0; i < rail; i++){
+    		if (i == 0 || i == rail - 1){
+    			int j = i;
+				while(j < size){
+					d_text[j] = text[k++];
+					j = j + 2*(rail - 1);
 				}
-		}		
-		loc = 0;
-		for(int j = 0; j < size % rail; j++){
-			tmp_text[j][col_num] = text[loc = loc  + q]; loc++;
+			}
+			
+			else{
+				int j = i, check = 0;
+				while(j < size){
+					if(!check){
+						d_text[j] = text[k++];
+						j = j + 2*(rail - i - 1);
+					}
+					else{
+						d_text[j] = text[k++];
+						j = j + 2*i;
+					}
+					check = !check;
+				}
+			}
 		}
-
-		for(col_num = 0; col_num < size; col_num++)
-			d_text[col_num] = tmp_text[col_num % rail][col_num / rail];
-
 		d_text[size] = '\0';
 		printf("Decipher : %s\n", d_text);
 	}
